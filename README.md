@@ -1,6 +1,6 @@
 # Iris MLOps Pipeline on Kubernetes (Kubeflow Pipelines)
 
-An end-to-end machine learning pipeline that fetches data, validates it, trains a model, and serves predictions over a REST API — all orchestrated on Kubernetes using Kubeflow Pipelines.
+An end-to-end machine learning pipeline that fetches data, validates it, trains a model, and serves predictions over a REST API - all orchestrated on Kubernetes using Kubeflow Pipelines.
 
 This project is split into two independent layers that work together: a **Model Creation layer** (training) and a **Model Consumption layer** (serving predictions). Understanding why they're separate is the core idea of this whole project.
 
@@ -10,10 +10,10 @@ This project is split into two independent layers that work together: a **Model 
 
 Think of this project like a small factory with two different departments:
 
-- **The Training Department** (Kubeflow Pipelines) — its only job is to produce a trained model. It runs a sequence of steps — fetch data, check the data is good, train the model — and then it's done. It doesn't run all the time; it runs on demand, like a batch job, and shuts down once finished.
-- **The Serving Department** (the FastAPI deployment) — its job is to take a trained model and answer questions about it, live, 24/7. Someone sends it a flower's measurements, it responds instantly with a prediction. Unlike the training department, this one stays running continuously, always ready to respond.
+- **The Training Department** (Kubeflow Pipelines) - its only job is to produce a trained model. It runs a sequence of steps - fetch data, check the data is good, train the model - and then it's done. It doesn't run all the time; it runs on demand, like a batch job, and shuts down once finished.
+- **The Serving Department** (the FastAPI deployment) - its job is to take a trained model and answer questions about it, live, 24/7. Someone sends it a flower's measurements, it responds instantly with a prediction. Unlike the training department, this one stays running continuously, always ready to respond.
 
-These two departments don't talk to each other in real time. The training department produces a "model file" — like a finished product — and the serving department is loaded up with that file to do its job. They're connected by an artifact (the model file), not by a live conversation.
+These two departments don't talk to each other in real time. The training department produces a "model file", like a finished product, and the serving department is loaded up with that file to do its job. They're connected by an artifact (the model file), not by a live conversation.
 
 ---
 
@@ -56,7 +56,7 @@ These two departments don't talk to each other in real time. The training depart
                                   (you / any client)
 ```
 
-**Key distinction:** the top half (training) is made of **short-lived Pods** that run once and exit. The bottom half (serving) is **one long-lived Pod** that never stops. This is a deliberate, realistic split — in real companies, the team that trains models and the team that serves them are often different, with a model file (or a model registry) as the handoff point between them.
+**Key distinction:** the top half (training) is made of **short-lived Pods** that run once and exit. The bottom half (serving) is **one long-lived Pod** that never stops. This is a deliberate, realistic split; in real companies, the team that trains models and the team that serves them are often different, with a model file (or a model registry) as the handoff point between them.
 
 ---
 
@@ -73,7 +73,7 @@ Reads the CSV and runs a set of quality checks:
 - Are the measurements within a sane physical range (no negative or absurd values)?
 - Are the species labels valid (only 3 expected classes)?
 
-If **any** check fails, this step exits with an error — and Kubernetes will **not** run the training step. Bad data never reaches the model. This is the "quality gate" of the pipeline.
+If **any** check fails, this step exits with an error, and Kubernetes will **not** run the training step. Bad data never reaches the model. This is the "quality gate" of the pipeline.
 
 ### 3. Train Model
 Trains a `RandomForestClassifier` on the validated data, evaluates it on a held-out test set, and saves:
@@ -82,8 +82,8 @@ Trains a `RandomForestClassifier` on the validated data, evaluates it on a held-
 
 ### 4. Deploy / Serve (Model Consumption)
 The trained model is packaged into a small web service (built with FastAPI) and deployed as a standing Kubernetes Deployment + Service. It exposes:
-- `GET /health` — used by Kubernetes itself to check the service is alive (and automatically restart it if not)
-- `POST /predict` — accepts flower measurements, returns the predicted species and confidence scores
+- `GET /health`, used by Kubernetes itself to check the service is alive (and automatically restart it if not)
+- `POST /predict`, accepts flower measurements, returns the predicted species and confidence scores
 
 ---
 
@@ -114,7 +114,7 @@ The pipeline begins by fetching and validating the dataset, then runs three hype
 ## How to run this yourself
 
 ### Prerequisites
-- A GitHub account (for Codespaces) — or Docker + Kind installed locally
+- A GitHub account (for Codespaces), or Docker + Kind installed locally
 - Basic familiarity with a terminal
 
 ### 1. Set up the cluster
